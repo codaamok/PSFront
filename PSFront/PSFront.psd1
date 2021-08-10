@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) Adam Cook (@codaamok). All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'An unofficial PowerShell module for Front''s Core API'
+Description = "An unofficial PowerShell module for Front's Core API"
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'

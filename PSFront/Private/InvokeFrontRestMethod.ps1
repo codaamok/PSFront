@@ -23,6 +23,8 @@ function InvokeFrontRestMethod {
         [SecureString]$ApiKey
     )
 
+    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($ApiKey)
+
     if (-not ("System.Web.HttpUtility" -as [Type])) {
         Add-Type -AssemblyName "System.Web" -ErrorAction "Stop"
     }
@@ -31,7 +33,7 @@ function InvokeFrontRestMethod {
         Method        = $Method
         URI           = "{0}/{1}" -f $URL, $Endpoint
         Headers       = @{
-            "Authorization" = "Bearer {0}" -f $ApiKey
+            "Authorization" = "Bearer {0}" -f [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
         }
         ContentType   = "application/json"
         ErrorAction   = "Stop"
@@ -131,4 +133,6 @@ function InvokeFrontRestMethod {
     } until ([String]::IsNullOrWhiteSpace($Data._pagination.next))
 
     Write-Output $Result
+
+    [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($BSTR)
 }
