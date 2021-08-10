@@ -19,7 +19,7 @@ function InvokeFrontRestMethod {
         [Parameter()]
         [System.Collections.Specialized.NameValueCollection]$Query,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [SecureString]$ApiKey
     )
 
@@ -54,7 +54,7 @@ function InvokeFrontRestMethod {
 
     $Params["URI"] = [System.Web.HttpUtility]::UrlDecode($Params["URI"])
 
-    $Result = do {
+    do {
         Write-Verbose "Calling Front API"
         Write-Verbose ("URI: '{0}'" -f $Params["URI"])
         Write-Verbose ("Body: '{0}'" -f $Params["Body"])
@@ -81,7 +81,7 @@ function InvokeFrontRestMethod {
                             $Exception,
                             $ErrorId,
                             [System.Management.Automation.ErrorCategory]::AuthenticationError,
-                            $Params['Url']
+                            $Params['Uri']
                         )
                     }
                     "BadRequest|Conflict" {
@@ -90,7 +90,7 @@ function InvokeFrontRestMethod {
                             $Exception,
                             $ErrorId,
                             [System.Management.Automation.ErrorCategory]::InvalidArgument,
-                            $Params['Url']
+                            $Params['Uri']
                         )
                     }
                     "NotFound" {
@@ -129,10 +129,12 @@ function InvokeFrontRestMethod {
             }
         }
 
+        # This could be null, depending if pagination is needed or not
+        # Update the URI just in case the loop isn't finished yet
+        $Params["URI"] = $Data._pagination.next
+
         Write-Output $Data._results
     } until ([String]::IsNullOrWhiteSpace($Data._pagination.next))
-
-    Write-Output $Result
 
     [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($BSTR)
 }

@@ -24,7 +24,7 @@ GUID = 'c5f69780-7a0f-40ac-90fd-5dd2c17f564d'
 Author = 'Adam Cook (@codaamok)'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+CompanyName = ''
 
 # Copyright statement for this module
 Copyright = '(c) Adam Cook (@codaamok). All rights reserved.'
@@ -69,7 +69,9 @@ PowerShellVersion = '5.1'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @()
+FunctionsToExport = @(
+    "Invoke-FrontRestMethod"
+)
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -95,13 +97,13 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @("Front","FrontApp")
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/codaamok/PSFront/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/codaamok/PSFront'
 
         # A URL to an icon representing this module.
         # IconUri = ''
