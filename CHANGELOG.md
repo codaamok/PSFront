@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.6] - 2021-11-22
 ### Added
 - New functions: `Update-FrontConversation`, `Find-FrontConversation`, `New-FrontComment`
 
@@ -12,3 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed parameter `-Tag` to `-TagId` in `Add-FrontConversationTag`
 - Use `PSCredential` object time to decode secure string instead of `ConvertFrom-SecureString` to consider older versions of PS
 
+[Unreleased]: https://github.com/codaamok/PSFront/compare/0.1.6..HEAD
+[0.1.6]: https://github.com/codaamok/PSFront/tree/0.1.6
