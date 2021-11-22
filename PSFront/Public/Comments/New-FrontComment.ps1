@@ -1,4 +1,4 @@
-function Add-FrontConversationTag {
+function New-FrontComment {
     <#
     .SYNOPSIS
         Short description
@@ -11,13 +11,18 @@ function Add-FrontConversationTag {
         Inputs (if any)
     .OUTPUTS
         Output (if any)
+    .NOTES
+        General notes
     #>
     param (
         [Parameter(Mandatory)]
         [String]$ConversationId,
 
         [Parameter(Mandatory)]
-        [String[]]$TagId,
+        [String]$AuthorId,
+
+        [Parameter(Mandatory)]
+        [String]$Comment,
 
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
@@ -26,9 +31,10 @@ function Add-FrontConversationTag {
     $Params = @{
         Method = "POST"
         Endpoint = "conversations"
-        Path = "{0}/tags" -f $ConversationId
+        Path = "{0}/comments" -f $ConversationId
         Body = @{
-            "tag_ids" = @($TagId)
+            author_id = $AuthorId
+            body = $Comment
         }
         ApiKey = $ApiKey
     }

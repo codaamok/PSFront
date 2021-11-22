@@ -1,4 +1,6 @@
-function Add-FrontConversationTag {
+#TODO Need to do more here than just tags
+
+function Update-FrontConversation {
     <#
     .SYNOPSIS
         Short description
@@ -24,9 +26,9 @@ function Add-FrontConversationTag {
     )
 
     $Params = @{
-        Method = "POST"
+        Method = "PATCH"
         Endpoint = "conversations"
-        Path = "{0}/tags" -f $ConversationId
+        Path = $ConversationId
         Body = @{
             "tag_ids" = @($TagId)
         }
