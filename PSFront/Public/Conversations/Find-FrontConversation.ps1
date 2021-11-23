@@ -97,6 +97,31 @@ function Find-FrontConversation {
                 $Query.add("is:{0}" -f $item)
             }
         }
+        "Recipient" {
+            foreach ($item in $Recipient) {
+                $Query.add("recipient:{0}" -f $item)
+            }
+        }
+        "From" {
+            foreach ($item in $From) {
+                $Query.add("from:{0}" -f $item)
+            }
+        }
+        "To" {
+            foreach ($item in $To) {
+                $Query.add("to:{0}" -f $item)
+            }
+        }
+        "CC" {
+            foreach ($item in $CC) {
+                $Query.add("cc:{0}" -f $item)
+            }
+        }
+        "BCC" {
+            foreach ($item in $BCC) {
+                $Query.add("bcc:{0}" -f $item)
+            }
+        }
     }
 
     $Params = @{
