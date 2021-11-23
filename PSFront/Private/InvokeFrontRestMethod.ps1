@@ -131,7 +131,12 @@ function InvokeFrontRestMethod {
         # Update the URI just in case the loop isn't finished yet
         $Params["URI"] = $Data._pagination.next
 
-        Write-Output $Data._results
+        if ($Data._results) {
+            Write-Output $Data._results
+        }
+        else {
+            Write-Output $Data
+        }
     } until ([String]::IsNullOrWhiteSpace($Data._pagination.next))
 
 }
