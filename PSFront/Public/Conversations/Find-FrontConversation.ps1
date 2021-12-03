@@ -20,14 +20,7 @@ function Find-FrontConversation {
         [Parameter()]
         [String[]]$InboxId,
 
-        [Parameter()]
-        [String[]]$TagId,
-
-        [Parameter()]
-        [String[]]$TopicId,
-
-        [Parameter()]
-        [String[]]$Contact,
+        [String[]]$Keyword,
 
         [Parameter()]
         [String[]]$Recipient,
@@ -43,6 +36,15 @@ function Find-FrontConversation {
 
         [Parameter()]
         [String[]]$BCC,
+
+        [Parameter()]
+        [String[]]$TagId,
+
+        [Parameter()]
+        [String[]]$TopicId,
+
+        [Parameter()]
+        [String[]]$Contact,
 
         [Parameter()]
         [String[]]$Participant,
@@ -72,19 +74,24 @@ function Find-FrontConversation {
     [System.Collections.Generic.List[String]]$Query = @()
 
     switch ($PSBoundParameters.Keys) {
+        "Keyword" {
+            foreach ($item in $Keyword) {
+                $Query.add('"{0}"' -f $item)
+            }
+        }
         "InboxId" {
-            foreach ($inbox in $InboxId) {
-                $Query.add("inbox:{0}" -f $inbox)
+            foreach ($item in $InboxId) {
+                $Query.add("inbox:{0}" -f $item)
             }
         }
         "TagId" {
-            foreach ($tag in $TagId) {
-                $Query.add("tag:{0}" -f $tag)
+            foreach ($item in $TagId) {
+                $Query.add("tag:{0}" -f $item)
             }
         }
         "TopicId" {
-            foreach ($topic in $TopicId) {
-                $Query.add("topic:{0}" -f $topic)
+            foreach ($item in $TopicId) {
+                $Query.add("topic:{0}" -f $item)
             }
         }
         "Contact" {

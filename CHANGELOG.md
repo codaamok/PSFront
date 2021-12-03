@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- New function: `Get-FrontInbox`
+- New functions: `Get-FrontInbox`, `Get-FrontTag`
 - Added more query filters to `Find-FrontConversation`
 
 ## [0.1.6] - 2021-11-22

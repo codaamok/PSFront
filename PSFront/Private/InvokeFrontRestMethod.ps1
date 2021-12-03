@@ -127,9 +127,21 @@ function InvokeFrontRestMethod {
             }
         }
 
-        # This could be null, depending if pagination is needed or not
-        # Update the URI just in case the loop isn't finished yet
-        $Params["URI"] = $Data._pagination.next
+        if ($Params["URI"] -ne $Data._pagination.next) {
+            # This could be null, depending if pagination is needed or not
+            # Update the URI just in case the loop isn't finished yet
+            $Params["URI"] = $Data._pagination.next
+        }
+        else {
+            $Exception = [System.InvalidOperationException]::new("Pagination failure with Front API (the same URL was given for next page)")
+            $ErrorRecord = [System.Management.Automation.ErrorRecord]::new(
+                $Exception,
+                $ErrorId,
+                [System.Management.Automation.ErrorCategory]::OperationStopped,
+                $Params['Uri']
+            )
+            $PSCmdlet.ThrowTerminatingError($ErrorRecord)
+        }
 
         if ($Data._results) {
             Write-Output $Data._results
