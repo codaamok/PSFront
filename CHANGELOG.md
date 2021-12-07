@@ -6,12 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- New functions: `Get-FrontInbox`, `Get-FrontTag`
+- New functions: `Get-FrontInbox`, `Get-FrontTag`, `Get-FrontMessageTemplate`, `Get-FrontMessageTemplateFolder`, `Update-FrontMessageTemplate`
 - Added more query filters to `Find-FrontConversation`
 
 ## [0.1.6] - 2021-11-22
 ### Added
-- New functions: `Update-FrontConversation`, `Find-FrontConversation`, `New-FrontComment`, `Get-FrontMessageTemplate`, `Get-FrontMessageTemplateFolder`, `Update-FrontMessageTemplate`
+- New functions: `Update-FrontConversation`, `Find-FrontConversation`, `New-FrontComment`
 
 ### Changed
 - Renamed parameter `-Tag` to `-TagId` in `Add-FrontConversationTag`
