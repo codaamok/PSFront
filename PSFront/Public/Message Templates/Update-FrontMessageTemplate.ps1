@@ -18,7 +18,19 @@ function Update-FrontMessageTemplate {
         [String]$Id,
 
         [Parameter()]
+        [String]$Name,
+
+        [Parameter()]
+        [String]$Subject,
+
+        [Parameter()]
         [String]$Body,
+
+        [Parameter()]
+        [String]$FolderId,
+
+        [Parameter()]
+        [String[]]$InboxId,
 
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
@@ -31,9 +43,23 @@ function Update-FrontMessageTemplate {
         Path     = $id
     }
 
+    $Body = @{}
+
     switch ($PSBoundParameters.Keys) {
+        "Name" {
+            $Params["Body"] = $Body["name"] = $Name
+        }
+        "Subject" {
+            $Params["Body"] = $Body["subject"] = $Subject
+        }
         "Body" {
-            $Params["Body"] = @{ body = $Body }
+            $Params["Body"] = $Body["body"] = $Body
+        }
+        "FolderId" {
+            $Params["FolderId"] = $Body["folder_id"] = $FolderId
+        }
+        "InboxId" {
+            $Params["InboxId"] = $Body["inbox_ids"] = @($InboxId)
         }
     }
 
