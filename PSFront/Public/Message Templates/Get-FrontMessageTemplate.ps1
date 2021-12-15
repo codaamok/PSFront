@@ -12,13 +12,16 @@ function Get-FrontMessageTemplate {
     .OUTPUTS
         Output (if any)
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName="ById")]
     param (
-        [Parameter(ParameterSetName="ById")]
+        [Parameter(Mandatory, ParameterSetName="ById")]
         [String]$Id,
 
-        [Parameter(ParameterSetName="ByFolderId")]
+        [Parameter(Mandatory, ParameterSetName="ByFolderId")]
         [String]$FolderId,
+
+        [Parameter(ParameterSetName="All")]
+        [Switch]$All,
 
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
@@ -38,7 +41,7 @@ function Get-FrontMessageTemplate {
             $Params["Endpoint"] = "message_template_folders"
             $Params["Path"]     = "{0}/message_templates" -f $FolderId
         }
-        default {
+        "All" {
             $Params["Endpoint"] = "message_templates"
         }
     }

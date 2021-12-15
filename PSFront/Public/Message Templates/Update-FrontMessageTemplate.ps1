@@ -14,32 +14,26 @@ function Update-FrontMessageTemplate {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(ParameterSetName="ById")]
+        [Parameter(Mandatory)]
         [String]$Id,
 
-        [Parameter(ParameterSetName="ByFolderId")]
-        [String]$FolderId,
+        [Parameter()]
+        [String]$Body,
 
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
     )
 
     $Params = @{
-        Method   = "GET"
+        Method   = "PATCH"
         ApiKey   = $ApiKey
+        Endpoint = "message_templates"
+        Path     = $id
     }
 
-    switch ($PSCmdlet.ParameterSetName) {
-        "ById" {
-            $Params["Endpoint"] = "message_templates"
-            $Params["Path"]     = $id
-        }
-        "ByFolderId" {
-            $Params["Endpoint"] = "message_template_folders"
-            $Params["Path"]     = "{0}/message_templates" -f $FolderId
-        }
-        default {
-            $Params["Endpoint"] = "message_templates"
+    switch ($PSBoundParameters.Keys) {
+        "Body" {
+            $Params["Body"] = @{ body = $Body }
         }
     }
 
