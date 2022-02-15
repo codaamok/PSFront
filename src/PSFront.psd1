@@ -12,7 +12,7 @@
 RootModule = 'PSFront.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2.3'
+ModuleVersion = '0.2.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -107,8 +107,8 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '# Added
-- Added support for handling 429 Too Many Requests HTTP response for Front''s rate limiting'
+        ReleaseNotes = '# Fixed
+- Fixed issue with rate limiting support in private function InvokeFrontRestMethod where you would likely experience an infinite loop based on the do/while looping criteria.'
 
         # Prerelease string of this module
         # Prerelease = ''

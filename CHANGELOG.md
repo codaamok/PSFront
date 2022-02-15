@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.4] - 2022-02-15
 ### Fixed
 - Fixed issue with rate limiting support in private function `InvokeFrontRestMethod` where you would likely experience an infinite loop based on the do/while looping criteria.
 
@@ -25,7 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed parameter `-Tag` to `-TagId` in `Add-FrontConversationTag`
 - Use `PSCredential` object time to decode secure string instead of `ConvertFrom-SecureString` to consider older versions of PS
 
-[Unreleased]: https://github.com/codaamok/PSFront/compare/0.2.3..HEAD
+[Unreleased]: https://github.com/codaamok/PSFront/compare/0.2.4..HEAD
+[0.2.4]: https://github.com/codaamok/PSFront/compare/0.2.3..0.2.4
 [0.2.3]: https://github.com/codaamok/PSFront/compare/0.1.14..0.2.3
 [0.1.14]: https://github.com/codaamok/PSFront/compare/0.1.6..0.1.14
 [0.1.6]: https://github.com/codaamok/PSFront/tree/0.1.6
