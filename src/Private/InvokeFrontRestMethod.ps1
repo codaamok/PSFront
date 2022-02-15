@@ -28,14 +28,15 @@ function InvokeFrontRestMethod {
     }
 
     $Params = @{
-        Method        = $Method
-        URI           = "{0}/{1}" -f $URL, $Endpoint
-        Headers       = @{
+        Method                  = $Method
+        URI                     = "{0}/{1}" -f $URL, $Endpoint
+        Headers                 = @{
             "Authorization" = "Bearer {0}" -f [PSCredential]::new("none", $ApiKey).GetNetworkCredential().Password
         }
-        ContentType   = "application/json"
-        ErrorAction   = "Stop"
-        ErrorVariable = "InvokeRestMethodError"
+        ResponseHeadersVariable = "ResponseHeaders"
+        ContentType             = "application/json"
+        ErrorAction             = "Stop"
+        ErrorVariable           = "InvokeRestMethodError"
     }
 
     if ($PSBoundParameters.ContainsKey("Path")) {
@@ -81,6 +82,7 @@ function InvokeFrontRestMethod {
                             [System.Management.Automation.ErrorCategory]::AuthenticationError,
                             $Params['Uri']
                         )
+                        $PSCmdlet.ThrowTerminatingError($ErrorRecord)
                     }
                     "BadRequest|Conflict" {
                         $Exception = [System.ArgumentException]::new($ExceptionMessage)
@@ -90,6 +92,7 @@ function InvokeFrontRestMethod {
                             [System.Management.Automation.ErrorCategory]::InvalidArgument,
                             $Params['Uri']
                         )
+                        $PSCmdlet.ThrowTerminatingError($ErrorRecord)
                     }
                     "NotFound" {
                         $Exception = [System.Management.Automation.ItemNotFoundException]::new($ExceptionMessage)
@@ -99,6 +102,7 @@ function InvokeFrontRestMethod {
                             [System.Management.Automation.ErrorCategory]::ObjectNotFound,
                             $Params['Uri']
                         )
+                        $PSCmdlet.ThrowTerminatingError($ErrorRecord)
                     }
                     "ServiceUnavailable" {
                         $Exception = [System.InvalidOperationException]::new($ExceptionMessage)
@@ -108,6 +112,32 @@ function InvokeFrontRestMethod {
                             [System.Management.Automation.ErrorCategory]::ResourceUnavailable,
                             $Params['Uri']
                         )
+                        $PSCmdlet.ThrowTerminatingError($ErrorRecord)
+                    }
+                    "TooManyRequests" {
+                        [int]$Seconds = [int]$InvokeRestMethodError.InnerException.Response.Headers.GetValues("Retry-After")[0] + 1
+                        Write-Verbose ("Exceeded number of requests allowed, will wait {0} second(s) until retrying" -f $Seconds)
+                        Start-Sleep -Seconds $Seconds
+
+                        $Params = @{
+                            Method   = $Method
+                            Endpoint = $Endpoint
+                            ApiKey   = $ApiKey
+                        }
+
+                        if ($PSBoundParameters.ContainsKey("Path")) {
+                            $Params["Path}"] = $Path
+                        }
+                    
+                        if ($PSBoundParameters.ContainsKey("Query")) {
+                            $Params["Query"] = $Query
+                        }
+                    
+                        if ($PSBoundParameters.ContainsKey("Body")) {
+                            $Params["Body"] = $Body
+                        }
+
+                        InvokeFrontRestMethod @Params
                     }
                     default {
                         $Exception = [System.InvalidOperationException]::new($ExceptionMessage)
@@ -117,10 +147,9 @@ function InvokeFrontRestMethod {
                             [System.Management.Automation.ErrorCategory]::InvalidOperation,
                             $Params['Uri']
                         )
+                        $PSCmdlet.ThrowTerminatingError($ErrorRecord)
                     }
                 }
-
-                $PSCmdlet.ThrowTerminatingError($ErrorRecord)
             }
             else {
                 $PSCmdlet.ThrowTerminatingError($_)
@@ -129,6 +158,7 @@ function InvokeFrontRestMethod {
 
         if ($Params["URI"] -ne $Data._pagination.next) {
             # This could be null, depending if pagination is needed or not
+            # This can also be null if received 429 Too Many Requests
             # Update the URI just in case the loop isn't finished yet
             $Params["URI"] = $Data._pagination.next
         }
