@@ -63,7 +63,7 @@ task PublishModule {
 task ImportBuildModule {
     if ($Script:ModuleName -eq "codaamok.build") {
         # This is to use module for building codaamok.build itself
-        Import-Module .\codaamok.build\codaamok.build.psd1
+        Import-Module .\src\codaamok.build.psd1
     }
     else {
         Import-Module "codaamok.build"
@@ -77,17 +77,17 @@ task InitaliseBuildDirectory {
         "{0}\release" -f $BuildRoot
     )
 
-    if (Test-Path -Path $BuildRoot\$Script:ModuleName\* -Include "*format.ps1xml") {
-        $Script:FormatFiles = Copy-Item -Path $BuildRoot\$Script:ModuleName\* -Destination $BuildRoot\build\$Script:ModuleName -Filter "*format.ps1xml" -PassThru
+    if (Test-Path -Path $BuildRoot\src\* -Include "*format.ps1xml") {
+        $Script:FormatFiles = Copy-Item -Path $BuildRoot\src\* -Destination $BuildRoot\build\$Script:ModuleName -Filter "*format.ps1xml" -PassThru
     }
 
-    if (Test-Path -Path $BuildRoot\$Script:ModuleName\Files\*) {
-        $Script:FileList = Copy-Item -Path $BuildRoot\$Script:ModuleName\Files\* -Destination $BuildRoot\build\$Script:ModuleName -Recurse -PassThru
+    if (Test-Path -Path $BuildRoot\src\Files\*) {
+        $Script:FileList = Copy-Item -Path $BuildRoot\src\Files\* -Destination $BuildRoot\build\$Script:ModuleName -Recurse -Force -PassThru
     }
 
     Copy-Item -Path $BuildRoot\LICENSE -Destination $BuildRoot\build\$Script:ModuleName\LICENSE
-    Copy-Item -Path $BuildRoot\$Script:ModuleName\en-US -Destination $BuildRoot\build\$Script:ModuleName -Recurse
-    $Script:ManifestFile = Copy-Item -Path $BuildRoot\$Script:ModuleName\$Script:ModuleName.psd1 -Destination $BuildRoot\build\$Script:ModuleName\$Script:ModuleName.psd1 -PassThru
+    Copy-Item -Path $BuildRoot\src\en-US -Destination $BuildRoot\build\$Script:ModuleName -Recurse
+    $Script:ManifestFile = Copy-Item -Path $BuildRoot\src\$Script:ModuleName.psd1 -Destination $BuildRoot\build\$Script:ModuleName\$Script:ModuleName.psd1 -PassThru
 }
 
 # Synopsis: Get change log data, copy it to the build directory, and create releasenotes.txt
@@ -111,13 +111,13 @@ task UpdateChangeLog -If ($Script:NewRelease) {
 # Synopsis: Creates a single .psm1 file of all private and public functions of the to-be-built module
 task CreateRootModule {
     $Script:RootModule = "{0}\build\{1}\{1}.psm1" -f $BuildRoot, $Script:ModuleName
-    $DevModulePath = "{0}\{1}" -f $BuildRoot, $Script:ModuleName
+    $DevModulePath = "{0}\src" -f $BuildRoot
     Export-RootModule -DevModulePath $DevModulePath -RootModule $Script:RootModule
 }
 
 # Synopsis: Create a single Process.ps1 script file for all script files under ScriptsToProcess\* (if any)
-task CreateProcessScript -If (Test-Path -Path ("{0}\{1}\ScriptsToProcess" -f $BuildRoot, $Script:ModuleName) -Include "*.ps1") {
-    Export-ScriptsToProcess -Path ("{0}\{1}\ScriptsToProcess" -f $BuildRoot, $Script:ModuleName)
+task CreateProcessScript -If (Test-Path -Path ("{0}\src\ScriptsToProcess" -f $BuildRoot) -Include "*.ps1") {
+    Export-ScriptsToProcess -Path ("{0}\src\ScriptsToProcess" -f $BuildRoot)
     $Script:ProcessScript = $true
 }
 
@@ -126,7 +126,7 @@ task UpdateModuleManifest {
     $UpdateModuleManifestSplat = @{
         Path              = $Script:ManifestFile
         RootModule        = (Split-Path $Script:RootModule -Leaf)
-        FunctionsToExport = Get-PublicFunctions -Path $BuildRoot\$Script:ModuleName\Public
+        FunctionsToExport = Get-PublicFunctions -Path $BuildRoot\src\Public
         ReleaseNotes      = (Get-Content $BuildRoot\release\releasenotes.txt) -replace '`'
     }
 
@@ -135,7 +135,7 @@ task UpdateModuleManifest {
         $UpdateModuleManifestSplat["ModuleVersion"] = $Script:Version
     }
     else {
-        $GitVersion = (gitversion.exe | ConvertFrom-Json)
+        $GitVersion = (gitversion | ConvertFrom-Json)
         $UpdateModuleManifestSplat["ModuleVersion"] = $GitVersion.MajorMinorPatch
         $UpdateModuleManifestSplat["Prerelease"] = $GitVersion.NuGetPreReleaseTag
     }
@@ -186,11 +186,11 @@ task UpdateProjectRepo -If ($NewRelease) {
     # Instead of copying the manifest from the .\build directory, update it in place
     # This enables me to keep FunctionsToExport = '*' for development. Therefore instead only update the important bits e.g. version and release notes    
     $UpdateModuleManifestSplat = @{
-        Path          = "{0}\{1}\{1}.psd1" -f $BuildRoot, $Script:ModuleName
+        Path          = "{0}\src\{1}.psd1" -f $BuildRoot, $Script:ModuleName
         ModuleVersion = $ManifestData.ModuleVersion
         ReleaseNotes  = $ManifestData.PrivateData.PSData.ReleaseNotes
     }
     Update-ModuleManifest @UpdateModuleManifestSplat
     
-    $null = Test-ModuleManifest -Path ("{0}\{1}\{1}.psd1" -f $BuildRoot, $Script:ModuleName)
+    $null = Test-ModuleManifest -Path ("{0}\src\{1}.psd1" -f $BuildRoot, $Script:ModuleName)
 }
