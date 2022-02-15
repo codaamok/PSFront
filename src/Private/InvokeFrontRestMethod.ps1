@@ -33,7 +33,6 @@ function InvokeFrontRestMethod {
         Headers                 = @{
             "Authorization" = "Bearer {0}" -f [PSCredential]::new("none", $ApiKey).GetNetworkCredential().Password
         }
-        ResponseHeadersVariable = "ResponseHeaders"
         ContentType             = "application/json"
         ErrorAction             = "Stop"
         ErrorVariable           = "InvokeRestMethodError"
