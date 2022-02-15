@@ -136,7 +136,7 @@ function InvokeFrontRestMethod {
                             $Params["Body"] = $Body
                         }
 
-                        InvokeFrontRestMethod @Params
+                        return InvokeFrontRestMethod @Params
                     }
                     default {
                         $Exception = [System.InvalidOperationException]::new($ExceptionMessage)
@@ -155,35 +155,28 @@ function InvokeFrontRestMethod {
             }
         }
 
-        if ($InvokeRestMethodError.ErrorRecord.Exception.Response.StatusCode -ne "TooManyRequests") {
-            if ($Params["URI"] -ne $Data._pagination.next) {
-                # This could be null, depending if pagination is needed or not
-                # This can also be null if received 429 Too Many Requests
-                # Update the URI just in case the loop isn't finished yet
-                $Params["URI"] = $Data._pagination.next
-            }
-            else {
-                $Exception = [System.InvalidOperationException]::new("Pagination failure with Front API (the same URL was given for next page)")
-                $ErrorRecord = [System.Management.Automation.ErrorRecord]::new(
-                    $Exception,
-                    $ErrorId,
-                    [System.Management.Automation.ErrorCategory]::OperationStopped,
-                    $Params['Uri']
-                )
-                $PSCmdlet.ThrowTerminatingError($ErrorRecord)
-            }
+        if ($Params["URI"] -ne $Data._pagination.next) {
+            # This could be null, depending if pagination is needed or not
+            # Update the URI just in case the loop isn't finished yet
+            $Params["URI"] = $Data._pagination.next
+        }
+        else {
+            $Exception = [System.InvalidOperationException]::new("Pagination failure with Front API (the same URL was given for next page)")
+            $ErrorRecord = [System.Management.Automation.ErrorRecord]::new(
+                $Exception,
+                $ErrorId,
+                [System.Management.Automation.ErrorCategory]::OperationStopped,
+                $Params['Uri']
+            )
+            $PSCmdlet.ThrowTerminatingError($ErrorRecord)
+        }
 
-            if ($Data._results) {
-                Write-Output $Data._results
-            }
-            else {
-                Write-Output $Data
-            }
+        if ($Data._results) {
+            Write-Output $Data._results
         }
         else {
             Write-Output $Data
         }
-
         
     } until ([String]::IsNullOrWhiteSpace($Data._pagination.next))
 
