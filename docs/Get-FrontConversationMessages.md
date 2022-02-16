@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-FrontConversation
+# Get-FrontConversationMessages
 
 ## SYNOPSIS
 Short description
@@ -13,7 +13,7 @@ Short description
 ## SYNTAX
 
 ```
-Get-FrontConversation [-ConversationId] <String> [-ApiKey] <SecureString> [<CommonParameters>]
+Get-FrontConversationMessages [-ConversationId] <String> [-ApiKey] <SecureString> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
