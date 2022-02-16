@@ -1,4 +1,4 @@
-function Get-FrontConversation {
+function Get-FrontConversationMessages {
     <#
     .SYNOPSIS
         Short description
@@ -15,7 +15,7 @@ function Get-FrontConversation {
     param (
         [Parameter(Mandatory)]
         [String]$ConversationId,
-        
+
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
     )
@@ -23,7 +23,7 @@ function Get-FrontConversation {
     $Params = @{
         Method   = "GET"
         Endpoint = "conversations"
-        Path     = $ConversationId
+        Path     = "{0}/messages" -f $ConversationId
         ApiKey   = $ApiKey
     }
     
