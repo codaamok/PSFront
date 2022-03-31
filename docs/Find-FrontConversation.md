@@ -17,7 +17,7 @@ Find-FrontConversation [[-InboxId] <String[]>] [[-Keyword] <String[]>] [[-Recipi
  [[-From] <String[]>] [[-To] <String[]>] [[-CC] <String[]>] [[-BCC] <String[]>] [[-TagId] <String[]>]
  [[-TopicId] <String[]>] [[-Contact] <String[]>] [[-Participant] <String[]>] [[-Assignee] <String[]>]
  [[-Author] <String[]>] [[-Mention] <String[]>] [[-Commenter] <String[]>] [[-Status] <String[]>]
- [[-Date] <String[]>] [-ApiKey] <SecureString> [<CommonParameters>]
+ [[-Before] <DateTime>] [[-After] <DateTime>] [-ApiKey] <SecureString> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -273,16 +273,31 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Date
-{{ Fill Date Description }}
+### -Before
+{{ Fill Before Description }}
 
 ```yaml
-Type: String[]
+Type: DateTime
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 17
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -After
+{{ Fill After Description }}
+
+```yaml
+Type: DateTime
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 18
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -297,7 +312,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 18
+Position: 19
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
