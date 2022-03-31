@@ -65,7 +65,10 @@ function Find-FrontConversation {
         [String[]]$Status,
 
         [Parameter()]
-        [String[]]$Date,
+        [datetime]$Before,
+
+        [Parameter()]
+        [datetime]$After,
 
         [Parameter(Mandatory)]
         [SecureString]$ApiKey
@@ -74,67 +77,73 @@ function Find-FrontConversation {
     [System.Collections.Generic.List[String]]$Query = @()
 
     switch ($PSBoundParameters.Keys) {
-        "Keyword" {
+        'Keyword' {
             foreach ($item in $Keyword) {
                 $Query.add('"{0}"' -f $item)
             }
         }
-        "InboxId" {
+        'InboxId' {
             foreach ($item in $InboxId) {
-                $Query.add("inbox:{0}" -f $item)
+                $Query.add('inbox:{0}' -f $item)
             }
         }
-        "TagId" {
+        'TagId' {
             foreach ($item in $TagId) {
-                $Query.add("tag:{0}" -f $item)
+                $Query.add('tag:{0}' -f $item)
             }
         }
-        "TopicId" {
+        'TopicId' {
             foreach ($item in $TopicId) {
-                $Query.add("topic:{0}" -f $item)
+                $Query.add('topic:{0}' -f $item)
             }
         }
-        "Contact" {
+        'Contact' {
             foreach ($item in $Contact) {
-                $Query.add("contact:{0}" -f $item)
+                $Query.add('contact:{0}' -f $item)
             }
         }
-        "Status" {
+        'Status' {
             foreach ($item in $Status) {
-                $Query.add("is:{0}" -f $item)
+                $Query.add('is:{0}' -f $item)
             }
         }
-        "Recipient" {
+        'Recipient' {
             foreach ($item in $Recipient) {
-                $Query.add("recipient:{0}" -f $item)
+                $Query.add('recipient:{0}' -f $item)
             }
         }
-        "From" {
+        'From' {
             foreach ($item in $From) {
-                $Query.add("from:{0}" -f $item)
+                $Query.add('from:{0}' -f $item)
             }
         }
-        "To" {
+        'To' {
             foreach ($item in $To) {
-                $Query.add("to:{0}" -f $item)
+                $Query.add('to:{0}' -f $item)
             }
         }
-        "CC" {
+        'CC' {
             foreach ($item in $CC) {
-                $Query.add("cc:{0}" -f $item)
+                $Query.add('cc:{0}' -f $item)
             }
         }
-        "BCC" {
+        'BCC' {
             foreach ($item in $BCC) {
-                $Query.add("bcc:{0}" -f $item)
+                $Query.add('bcc:{0}' -f $item)
             }
+        }
+        'Before' {
+            $Query.add('before:{0}' -f (Get-Date $Before -UFormat '%s'))
+        }
+        'After' {
+            $Query.add('after:{0}' -f (Get-Date $After -UFormat '%s'))
         }
     }
 
     $Params = @{
-        Method = "GET"
-        Endpoint = "conversations"
-        Path = "search/{0}" -f [String]::Join(" ", $Query)
+        Method = 'GET'
+        Endpoint = 'conversations'
+        Path = 'search/{0}' -f [String]::Join(' ', $Query)
         ApiKey = $ApiKey
     }
 
