@@ -12,6 +12,7 @@ function Remove-FrontConversationTag {
     .OUTPUTS
         Output (if any)
     #>
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [Parameter(Mandatory)]
         [String]$ConversationId,
@@ -34,7 +35,12 @@ function Remove-FrontConversationTag {
     }
 
     try {
-        InvokeFrontRestMethod @Params
+        if ($PSCmdlet.ShouldProcess(
+            ('Would remove tag ID(s) "{0}" to conversation "{1}"' -f [String]::Join('", "', $TagId), $ConversationId),
+            "Are you sure you want to continue?",
+            ('Removing tag ID(s) "{0}" to conversation "{1}"' -f [String]::Join('", "', $TagId), $ConversationId))) {
+                InvokeFrontRestMethod @Params
+            }
     }
     catch {
         Write-Error -ErrorRecord $_

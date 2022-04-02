@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added `-WhatIf` support to `New-FrontComment`
+- Added `-WhatIf` support to `Remove-FrontConversationTag`
+- Added `-WhatIf` support to `Add-FrontConversationTag`
 
 ## [0.2.6] - 2022-03-31
 ### Added

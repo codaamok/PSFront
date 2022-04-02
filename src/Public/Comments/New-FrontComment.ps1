@@ -14,6 +14,7 @@ function New-FrontComment {
     .NOTES
         General notes
     #>
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     param (
         [Parameter(Mandatory)]
         [String]$ConversationId,
@@ -40,7 +41,12 @@ function New-FrontComment {
     }
 
     try {
-        InvokeFrontRestMethod @Params
+        if ($PSCmdlet.ShouldProcess(
+            ('Would add commment "{0}" as author "{1}" to conversation "{2}"' -f $Comment, $AuthorId, $ConversationId),
+            "Are you sure you want to continue?",
+            ('Adding commment "{0}" as author "{1}" to conversation "{2}"' -f $Comment, $AuthorId, $ConversationId))) {
+                InvokeFrontRestMethod @Params
+            }
     }
     catch {
         Write-Error -ErrorRecord $_

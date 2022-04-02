@@ -12,6 +12,7 @@ function Add-FrontConversationTag {
     .OUTPUTS
         Output (if any)
     #>
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     param (
         [Parameter(Mandatory)]
         [String]$ConversationId,
@@ -34,7 +35,12 @@ function Add-FrontConversationTag {
     }
 
     try {
-        InvokeFrontRestMethod @Params
+        if ($PSCmdlet.ShouldProcess(
+            ('Would add tag ID(s) "{0}" to conversation "{1}"' -f [String]::Join('", "', $TagId), $ConversationId),
+            "Are you sure you want to continue?",
+            ('Adding tag ID(s) "{0}" to conversation "{1}"' -f [String]::Join('", "', $TagId), $ConversationId))) {
+                InvokeFrontRestMethod @Params
+            }
     }
     catch {
         Write-Error -ErrorRecord $_
