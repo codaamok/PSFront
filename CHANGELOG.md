@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- New function: `Get-FrontCompanyTags`
+
 ## [0.3.0] - 2022-08-12
 ### Added
 - New commands: `New-FrontTag` and `Remove-FrontTag`
